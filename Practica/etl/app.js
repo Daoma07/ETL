@@ -13,5 +13,5 @@ async function main () {
     }
 }
 
-const intervalo = 60000; // 1 minuto = 60000 milisegundos
+const intervalo = 6000; // 1 minuto = 60000 milisegundos
 setInterval(main, intervalo);
