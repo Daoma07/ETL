@@ -1,4 +1,4 @@
-const destinoDB = require('../config/origenDB.json');
+const destinoDB = require('../config/destinoDB.json');
 const origenDB = require('../config/origenDB.json');
 const { Sequelize } = require('sequelize');
 
