@@ -12,6 +12,7 @@ const { inciarDistritoJudicialETL } = require("./controllers/distritoJudicialETL
 async function main() {
     try {
         inciarDistritoJudicialETL();
+        console.log("App Corriendo.....");
     } catch (error) {
         console.error('Error en el proceso ETL:', error);
 
