@@ -1,5 +1,6 @@
 const destinoDB = require('../config/destinoDB.json');
 const origenDB = require('../config/origenDB.json');
+const codigosPostalesDB = require('../config/codigosPostalesDB.json');
 const { Sequelize } = require('sequelize');
 
 // Conexion a la base de datos destino
@@ -28,9 +29,22 @@ const conexionOrigenDB = new Sequelize(
     }
 );
 
+// Conexion a la base de datos origen
+const conexionCodigosPostalesDB = new Sequelize(
+    codigosPostalesDB.database.databaseName,
+    codigosPostalesDB.database.username,
+    codigosPostalesDB.database.password,
+    {
+        host: codigosPostalesDB.database.host,
+        port: codigosPostalesDB.database.port,
+        dialect: 'mysql',
+        logging: false,
+    }
+);
 
 // Exportar la conexion
 module.exports = {
     conexionDestinoDB,
-    conexionOrigenDB
+    conexionOrigenDB,
+    conexionCodigosPostalesDB
 };

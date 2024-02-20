@@ -12,7 +12,7 @@ async function extraerDatos() {
         }
     } catch (error) {
         console.error("Error al extraer datos:", error);
-        throw error; // o manejar este error de acuerdo a tus necesidade
+        throw error;
     }
 }
 
@@ -32,7 +32,7 @@ async function cargarDatos(empleadosTransformados) {
         await conexionDestinoDB.query('SET FOREIGN_KEY_CHECKS = 0');
         await modeloEmpleadoDes.Empleado.sync({ force: true });
         await modeloEmpleadoDes.Empleado.bulkCreate(empleadosTransformados);
-        console.log('Datos cargados correctamente en la base de datos de destino.');
+
     } catch (error) {
         console.error('Error al conectar con la base de datos de destino:', error);
     }

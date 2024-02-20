@@ -12,7 +12,7 @@ async function extraerDatos() {
         }
     } catch (error) {
         console.error("Error al extraer datos:", error);
-        throw error; // o manejar este error de acuerdo a tus necesidade
+        throw error; 
     }
 }
 
@@ -30,9 +30,7 @@ async function cargarDatos(asesoresTransformadas) {
     try {
 
         await modeloAsesorDes.Asesor.sync({ force: true });
-
         await modeloAsesorDes.Asesor.bulkCreate(asesoresTransformadas);
-        console.log('Datos cargados correctamente en la base de datos de destino.');
     } catch (error) {
         console.error('Error al conectar con la base de datos de destino:', error);
     }

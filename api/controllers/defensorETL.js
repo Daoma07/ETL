@@ -12,7 +12,7 @@ async function extraerDatos() {
         }
     } catch (error) {
         console.error("Error al extraer datos:", error);
-        throw error; // o manejar este error de acuerdo a tus necesidade
+        throw error; 
     }
 }
 
@@ -32,7 +32,6 @@ async function cargarDatos(defensoresTransformados) {
         await modeloDefensorDes.Defensor.sync({ force: true });
 
         await modeloDefensorDes.Defensor.bulkCreate(defensoresTransformados);
-        console.log('Datos cargados correctamente en la base de datos de destino.');
     } catch (error) {
         console.error('Error al conectar con la base de datos de destino:', error);
     }
