@@ -1,0 +1,4 @@
+Agrefgar un servicio a la compu, chron tarea programada, no dentro del codigo
+Actualizar sin borrar los datos
+Hacer bitacoras para en caso de error subir los datos faltantes
+
