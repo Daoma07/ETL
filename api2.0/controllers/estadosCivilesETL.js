@@ -1,6 +1,6 @@
 const modeloEstadoCivilOri = require('../models/origen/modeloEstadoCivil');
 const modeloEstadoCivilDes = require('../models/destino/modeloEstadoCivil');
-const { conexionDestinoDB } = require('../db/conexion');
+const { conexionDestinoDB, Sequelize } = require('../db/conexion');
 
 async function extraerDatos() {
     try {
@@ -27,14 +27,40 @@ function transformarDatos(estadoCiviles) {
     }
 }
 
-async function cargarDatos(estadiCivilesTransformados) {
+async function cargarDatos(estadosCivilesTransformados) {
     try {
+        // Obtener todos los registros existentes en la base de datos de destino
+        const estadosCivilesDestino = await modeloEstadoCivilDes.EstadoCivil.findAll();
 
-        await conexionDestinoDB.query('SET FOREIGN_KEY_CHECKS = 0');
-        await modeloEstadoCivilDes.EstadoCivil.sync({ force: true });
-        await modeloEstadoCivilDes.EstadoCivil.bulkCreate(estadiCivilesTransformados);
+        // Identificar los IDs de los registros en la base de datos de destino
+        const idsDestino = estadosCivilesDestino.map(estadoCivil => estadoCivil.id_estado_civil);
+
+        // Crear una transacción para agrupar las operaciones de actualización y eliminación
+        await conexionDestinoDB.transaction(async (t) => {
+            // Actualizar o insertar registros existentes en la base de datos de destino
+            for (const estadoCivilTransformado of estadosCivilesTransformados) {
+                if (idsDestino.includes(estadoCivilTransformado.id_estado_civil)) {
+                    // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
+                    await modeloEstadoCivilDes.EstadoCivil.update(estadoCivilTransformado, {
+                        where: { id_estado_civil: estadoCivilTransformado.id_estado_civil },
+                        transaction: t
+                    });
+                } else {
+                    // Si el registro no existe, insertarlo en la base de datos de destino
+                    await modeloEstadoCivilDes.EstadoCivil.create(estadoCivilTransformado, { transaction: t });
+                }
+            }
+            // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
+            await modeloEstadoCivilDes.EstadoCivil.destroy({
+                where: {
+                    id_estado_civil: { [Sequelize.Op.notIn]: estadosCivilesTransformados.map(estadoCivil => estadoCivil.id_estado_civil) }
+                },
+                transaction: t
+            });
+        });
+
     } catch (error) {
-        console.error('Error al conectar con la base de datos de destino:', error);
+        console.error('Error al cargar datos:', error);
     }
 }
 

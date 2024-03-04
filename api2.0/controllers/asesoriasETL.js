@@ -10,7 +10,7 @@ const modeloCiudad = require('../models/direccion/ciudades.models');
 const modeloEmpleado = require('../models/origen/modeloEmpleado');
 const modeloPersonaOri = require('../models/origen/modeloPersona');
 const modeloDistritoJudicial = require('../models/origen/modeloDistritoJudicial');
-const { conexionDestinoDB } = require('../db/conexion');
+const { conexionDestinoDB, Sequelize } = require('../db/conexion');
 
 async function extraerDatos() {
     try {
@@ -26,6 +26,7 @@ async function extraerDatos() {
         throw error;
     }
 }
+
 
 async function transformarDatos(asesorias) {
     if (asesorias) {
@@ -60,9 +61,6 @@ async function transformarDatos(asesorias) {
 }
 
 
-
-
-
 async function obtenerDireccion(id_asesoria) {
     const persona = await modeloPersonaOri.Persona.findByPk(id_asesoria);
     const domicilio = await modeloDomicilion.Domicilio.findByPk(persona.id_domicilio);
@@ -78,15 +76,40 @@ async function obtenerDireccion(id_asesoria) {
 }
 
 
-
-async function cargarDatos(asesoresTransformados) {
+async function cargarDatos(asesoriasTransformadas) {
     try {
+        // Obtener todos los registros existentes en la base de datos de destino
+        const asesoriasDestino = await modeloAsesoriasDes.Asesoria.findAll();
 
-        await conexionDestinoDB.query('SET FOREIGN_KEY_CHECKS = 0');
-        await modeloAsesoriasDes.Asesoria.sync({ force: true });
-        await modeloAsesoriasDes.Asesoria.bulkCreate(asesoresTransformados);
+        // Identificar los IDs de los registros en la base de datos de destino
+        const idsDestino = asesoriasDestino.map(asesoria => asesoria.id_asesoria);
+
+        // Crear una transacción para agrupar las operaciones de actualización y eliminación
+        await conexionDestinoDB.transaction(async (t) => {
+            // Actualizar o insertar registros existentes en la base de datos de destino
+            for (const asesoriaTransformada of asesoriasTransformadas) {
+                if (idsDestino.includes(asesoriaTransformada.id_asesoria)) {
+                    // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
+                    await modeloAsesoriasDes.Asesoria.update(asesoriaTransformada, {
+                        where: { id_asesoria: asesoriaTransformada.id_asesoria },
+                        transaction: t
+                    });
+                } else {
+                    // Si el registro no existe, insertarlo en la base de datos de destino
+                    await modeloAsesoriasDes.Asesoria.create(asesoriaTransformada, { transaction: t });
+                }
+            }
+            // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
+            await modeloAsesoriasDes.Asesoria.destroy({
+                where: {
+                    id_asesoria: { [Sequelize.Op.notIn]: asesoriasTransformadas.map(asesoria => asesoria.id_asesoria) }
+                },
+                transaction: t
+            });
+        });
+
     } catch (error) {
-        console.error('Error al conectar con la base de datos de destino:', error);
+        console.error('Error al cargar datos:', error);
     }
 }
 

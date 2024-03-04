@@ -15,9 +15,7 @@ const { iniciarAsesoriaETL } = require("../controllers/asesoriasETL");
 const { iniciarZonaETL } = require("../controllers/zonaETL");
 
 function main() {
-    // const intervalo = 6000; // 1 minuto = 60000 milisegundos
-    // setInterval(etl, intervalo);
-    cron.schedule(' */10 * * * * *',()=>{
+    cron.schedule(' */10 * * * * *', () => {
         etl();
     })
 }
@@ -25,42 +23,24 @@ function main() {
 async function etl() {
 
     try {
-        await iniciarZonaETL();
-        await wait(1000);
-        await iniciarAsesorETL();
-        await wait(1000);
-        await iniciarDefensorETL();
-        await wait(1000);
-        await iniciarTurnoETL();
-        await wait(1000);
-        await iniciarTipoJuicioETL();
-        await wait(1000);
-        await iniciarTipoJuicioETL();
-        await wait(1000);
-        await iniciarEstadoCivilETL();
-        await wait(1000);
-        await iniciarMunicipioDistritoETL();
-        await wait(1000);
-        await inciarDistritoJudicialETL();
-        await wait(1000);
-        await iniciarAsesoradoETL();
-        await wait(1000);
-        await iniciarAsesoriaETL();
-        await wait(1000);
-        await iniciarEmpleadoETL();
-        await wait(1000);
-        await iniciarGeneroETL();
-        await wait(1000);
-        await iniciarMotivoETL();
-        await wait(1000);
+        iniciarZonaETL();
+        iniciarAsesorETL();
+        iniciarDefensorETL();
+        iniciarEmpleadoETL();
+        iniciarTurnoETL();
+        iniciarTipoJuicioETL();
+        iniciarEstadoCivilETL();
+        iniciarGeneroETL();
+        iniciarMunicipioDistritoETL();
+        iniciarMotivoETL();
+        inciarDistritoJudicialETL();
+        iniciarAsesoradoETL();
+        iniciarAsesoriaETL();
         console.log("App Corriendo.....");
     } catch (error) {
         console.error('Error en el proceso ETL:', error);
 
     }
-}
-function wait(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 module.exports = { main };

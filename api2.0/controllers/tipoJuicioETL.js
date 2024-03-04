@@ -1,6 +1,6 @@
 const modeloTipoJuicioOri = require('../models/origen/modeloTipoJuicio');
 const modeloTipoJuicioDes = require('../models/destino/modeloTipoJuicio');
-const { conexionDestinoDB } = require('../db/conexion');
+const { conexionDestinoDB, Sequelize } = require('../db/conexion');
 
 async function extraerDatos() {
     try {
@@ -13,15 +13,15 @@ async function extraerDatos() {
         }
     } catch (error) {
         console.error("Error al extraer datos:", error);
-        throw error; 
+        throw error;
     }
 }
 
 function transformarDatos(tipoJuicios) {
     if (tipoJuicios) {
-        cargarDatos(tipoJuicios.map(tipoJuicio => ({
-            id_tipo: tipoJuicio.id_tipo,
-            tipo_juicio: tipoJuicio.tipo_juicio
+        cargarDatos(tipoJuicios.map(TipoJuicio => ({
+            id_tipo_juicio: TipoJuicio.id_tipo_juicio,
+            tipo_juicio: TipoJuicio.tipo_juicio
         }))
         );
     }
@@ -29,12 +29,38 @@ function transformarDatos(tipoJuicios) {
 
 async function cargarDatos(tipoJuiciosTransformados) {
     try {
+        // Obtener todos los registros existentes en la base de datos de TipoJuicio
+        const tipoJuiciosDestino = await modeloTipoJuicioDes.TipoJuicio.findAll();
 
-        await conexionDestinoDB.query('SET FOREIGN_KEY_CHECKS = 0');
-        await modeloTipoJuicioDes.TipoJuicio.sync({ force: true });
-        await modeloTipoJuicioDes.TipoJuicio.bulkCreate(tipoJuiciosTransformados);
+        // Identificar los IDs de los registros en la base de datos de TipoJuicio
+        const idsDestino = tipoJuiciosDestino.map(TipoJuicio => TipoJuicio.id_tipo_juicio);
+
+        // Crear una transacción para agrupar las operaciones de actualización y eliminación
+        await conexionDestinoDB.transaction(async (t) => {
+            // Actualizar o insertar registros existentes en la base de datos de TipoJuicio
+            for (const tipoJuicioTransformado of tipoJuiciosTransformados) {
+                if (idsDestino.includes(tipoJuicioTransformado.id_tipo_juicio)) {
+                    // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
+                    await modeloTipoJuicioDes.TipoJuicio.update(tipoJuicioTransformado, {
+                        where: { id_tipo_juicio: tipoJuicioTransformado.id_tipo_juicio },
+                        transaction: t
+                    });
+                } else {
+                    // Si el registro no existe, insertarlo en la base de datos de TipoJuicio
+                    await modeloTipoJuicioDes.TipoJuicio.create(tipoJuicioTransformado, { transaction: t });
+                }
+            }
+            // Eliminar registros en la base de datos de TipoJuicio que no existen en los datos extraídos
+            await modeloTipoJuicioDes.TipoJuicio.destroy({
+                where: {
+                    id_tipo_juicio: { [Sequelize.Op.notIn]: tipoJuiciosTransformados.map(TipoJuicio => TipoJuicio.id_tipo_juicio) }
+                },
+                transaction: t
+            });
+        });
+
     } catch (error) {
-        console.error('Error al conectar con la base de datos de destino:', error);
+        console.error('Error al cargar datos:', error);
     }
 }
 

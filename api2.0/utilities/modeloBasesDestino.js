@@ -430,19 +430,6 @@ const DistritoJudicial = conexionDestinoDB.define(
 );
 
 
-/**
- *  @typedef {Object} Asesoria
- * @property {number} id_asesoria
- * @property {string} resumen_asesoria
- *  @property {string} conclusion_asesoria
- * @property {boolean} estatus_requisitos
- * @property {Date} fecha_registro
- * @property {number} id_empleado
- * @property {number} id_turno
- * @property {number} id_asesorado
- * @property {string} usuario 
- * @property {number} id_tipo_juicio
- */
 const Asesoria = conexionDestinoDB.define(
     "asesorias",
     {

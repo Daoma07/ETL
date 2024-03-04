@@ -46,5 +46,6 @@ const conexionCodigosPostalesDB = new Sequelize(
 module.exports = {
     conexionDestinoDB,
     conexionOrigenDB,
-    conexionCodigosPostalesDB
+    conexionCodigosPostalesDB,
+    Sequelize
 };

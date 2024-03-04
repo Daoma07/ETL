@@ -2,11 +2,11 @@
   "name": "api",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "nodeService.js",
   
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon .dist/app.js"
+    "dev": "nodemon .dist/nodeService.js"
   },
   "keywords": [],
   "author": "",

@@ -1,6 +1,6 @@
 const modeloGeneroOri = require('../models/origen/modeloGenero');
 const modeloGeneroDes = require('../models/destino/modeloGenero');
-const { conexionDestinoDB } = require('../db/conexion');
+const { conexionDestinoDB, Sequelize } = require('../db/conexion');
 
 async function extraerDatos() {
     try {
@@ -29,11 +29,38 @@ function transformarDatos(generos) {
 
 async function cargarDatos(generosTransformados) {
     try {
-        await conexionDestinoDB.query('SET FOREIGN_KEY_CHECKS = 0');
-        await modeloGeneroDes.Genero.sync({ force: true });
-        await modeloGeneroDes.Genero.bulkCreate(generosTransformados);
+        // Obtener todos los registros existentes en la base de datos de destino
+        const generosDestino = await modeloGeneroDes.Genero.findAll();
+
+        // Identificar los IDs de los registros en la base de datos de destino
+        const idsDestino = generosDestino.map(genero => genero.id_genero);
+
+        // Crear una transacción para agrupar las operaciones de actualización y eliminación
+        await conexionDestinoDB.transaction(async (t) => {
+            // Actualizar o insertar registros existentes en la base de datos de destino
+            for (const generoTransformado of generosTransformados) {
+                if (idsDestino.includes(generoTransformado.id_genero)) {
+                    // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
+                    await modeloGeneroDes.Genero.update(generoTransformado, {
+                        where: { id_genero: generoTransformado.id_genero },
+                        transaction: t
+                    });
+                } else {
+                    // Si el registro no existe, insertarlo en la base de datos de destino
+                    await modeloGeneroDes.Genero.create(generoTransformado, { transaction: t });
+                }
+            }
+            // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
+            await modeloGeneroDes.Genero.destroy({
+                where: {
+                    id_genero: { [Sequelize.Op.notIn]: generosTransformados.map(genero => genero.id_genero) }
+                },
+                transaction: t
+            });
+        });
+
     } catch (error) {
-        console.error('Error al conectar con la base de datos de destino:', error);
+        console.error('Error al cargar datos:', error);
     }
 }
 

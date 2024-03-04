@@ -1,6 +1,6 @@
 const modeloMotivoOri = require('../models/origen/modeloMotivo');
 const modeloMotivoDes = require('../models/destino/modeloMotivo');
-const { conexionDestinoDB } = require('../db/conexion');
+const { conexionDestinoDB, Sequelize } = require('../db/conexion');
 
 async function extraerDatos() {
     try {
@@ -29,11 +29,38 @@ function transformarDatos(motivos) {
 
 async function cargarDatos(motivosTransformados) {
     try {
-        await conexionDestinoDB.query('SET FOREIGN_KEY_CHECKS = 0');
-        await modeloMotivoDes.Motivo.sync({ force: true });
-        await modeloMotivoDes.Motivo.bulkCreate(motivosTransformados);
+        // Obtener todos los registros existentes en la base de datos de destino
+        const motivosDestino = await modeloMotivoDes.Motivo.findAll();
+
+        // Identificar los IDs de los registros en la base de datos de destino
+        const idsDestino = motivosDestino.map(motivo => motivo.id_motivo);
+
+        // Crear una transacción para agrupar las operaciones de actualización y eliminación
+        await conexionDestinoDB.transaction(async (t) => {
+            // Actualizar o insertar registros existentes en la base de datos de destino
+            for (const motivoTransformado of motivosTransformados) {
+                if (idsDestino.includes(motivoTransformado.id_motivo)) {
+                    // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
+                    await modeloMotivoDes.Motivo.update(motivoTransformado, {
+                        where: { id_motivo: motivoTransformado.id_motivo },
+                        transaction: t
+                    });
+                } else {
+                    // Si el registro no existe, insertarlo en la base de datos de destino
+                    await modeloMotivoDes.Motivo.create(motivoTransformado, { transaction: t });
+                }
+            }
+            // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
+            await modeloMotivoDes.Motivo.destroy({
+                where: {
+                    id_motivo: { [Sequelize.Op.notIn]: motivosTransformados.map(motivo => motivo.id_motivo) }
+                },
+                transaction: t
+            });
+        });
+
     } catch (error) {
-        console.error('Error al conectar con la base de datos de destino:', error);
+        console.error('Error al cargar datos:', error);
     }
 }
 
