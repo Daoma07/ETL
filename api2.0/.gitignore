@@ -1,0 +1,4 @@
+#Ignore db Configuration files
+codigoPostalesDB.json
+destinoDB.json
+origenDB.json
