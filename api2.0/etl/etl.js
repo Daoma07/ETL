@@ -28,14 +28,14 @@ async function etl() {
         iniciarDefensorETL();
         iniciarEmpleadoETL();
         iniciarTurnoETL();
-        iniciarTipoJuicioETL();
-        iniciarEstadoCivilETL();
-        iniciarGeneroETL();
-        iniciarMunicipioDistritoETL();
-        iniciarMotivoETL();
-        inciarDistritoJudicialETL();
-        iniciarAsesoradoETL();
-        iniciarAsesoriaETL();
+        //iniciarTipoJuicioETL();
+        // iniciarEstadoCivilETL();
+        // iniciarGeneroETL();
+        // iniciarMunicipioDistritoETL();
+        // iniciarMotivoETL();
+        // inciarDistritoJudicialETL();
+        // iniciarAsesoradoETL();
+        // iniciarAsesoriaETL();
         console.log("App Corriendo.....");
     } catch (error) {
         console.error('Error en el proceso ETL:', error);

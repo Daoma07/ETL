@@ -317,10 +317,25 @@ const Turno = conexionOrigenDB.define(
         hora_turno: {
             type: DataTypes.TIME,
             allowNull: false,
-            validate: {
-                is: /^([01]\d|2[0-3]):([0-5]\d)$/,
-            },
+             validate: {
+                //is: /^([01]\d|2[0-3]):([0-5]\d)$/,
+                is: true,
+             },
         },
+        id_defensor: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        id_asesoria: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        estatus_general:{
+            type: DataTypes.ENUM('NO_SEGUIMIENTO', 'EN_SEGUIMIENTO'), // Define enum values
+            allowNull: false,
+        },
+
+        
     },
     {
         freezeTableName: true,

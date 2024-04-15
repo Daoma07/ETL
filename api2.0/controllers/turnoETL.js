@@ -20,11 +20,13 @@ async function extraerDatos() {
 function transformarDatos(turnos) {
     if (turnos) {
         cargarDatos(turnos.map(turno => ({
+            
             id_turno: turno.id_turno,
             fecha_turno: turno.fecha_turno,
             hora_turno: turno.hora_turno
         }))
         );
+        console.log(turnos)
     }
 }
 
@@ -32,7 +34,7 @@ async function cargarDatos(turnosTransformados) {
     try {
         // Obtener todos los registros existentes en la base de datos de turno
         const turnosDestino = await modeloTurnoDes.Turno.findAll();
-
+        console.log("encuentra turnos destino");
         // Identificar los IDs de los registros en la base de datos de turno
         const idsDestino = turnosDestino.map(turno => turno.id_turno);
 

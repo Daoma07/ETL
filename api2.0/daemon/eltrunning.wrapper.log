@@ -34,3 +34,7 @@
 2024-02-27 22:12:36 - Started 25932
 2024-02-28 01:20:29 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\Users\hrive\Documents\Universidad\Servicio\ETL\api2.0\node_modules\node-windows\lib\wrapper.js --file C:\Users\hrive\Documents\Universidad\Servicio\ETL\api2.0\app.js --scriptoptions= --log "ELT Running wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
 2024-02-28 01:20:29 - Started 7204
+2024-04-12 17:16:33 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\Users\hrive\Documents\Universidad\Servicio\ETL\api2.0\node_modules\node-windows\lib\wrapper.js --file C:\Users\hrive\Documents\Universidad\Servicio\ETL\api2.0\app.js --scriptoptions= --log "ELT Running wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2024-04-12 17:16:33 - Started 26428
+2024-04-12 17:33:11 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\Users\hrive\Documents\Universidad\Servicio\ETL\api2.0\node_modules\node-windows\lib\wrapper.js --file C:\Users\hrive\Documents\Universidad\Servicio\ETL\api2.0\app.js --scriptoptions= --log "ELT Running wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2024-04-12 17:33:11 - Started 24984
