@@ -5,6 +5,6 @@
       "port": 3306,
       "username": "root",
       "password": "root",
-      "databaseName": "consejeria_codigos_postales"
+      "databaseName": "defensoria_codigos_postales"
     }
   }
