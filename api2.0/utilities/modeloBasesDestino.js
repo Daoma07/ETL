@@ -187,6 +187,11 @@ const Turno = conexionDestinoDB.define(
             validate: {
                 is: /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/
             },
+            id_asesoria: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+            },
+
         },
     },
     {
@@ -213,8 +218,8 @@ const Asesorado = conexionDestinoDB.define(
     {
         id_asesorado: {
             type: DataTypes.INTEGER,
-            allowNull: false,
             primaryKey: true,
+            autoIncrement: true
         },
         id_estado_civil: {
             type: DataTypes.INTEGER,
@@ -236,23 +241,27 @@ const Asesorado = conexionDestinoDB.define(
         },
         estado: {
             type: DataTypes.STRING(60),
-            allowNull: false,
+            allowNull: true,
         },
         municipio: {
             type: DataTypes.STRING(60),
-            allowNull: false,
+            allowNull: true,
         },
         ciudad: {
             type: DataTypes.STRING(60),
-            allowNull: false,
+            allowNull: true,
         },
         codigo_postal: {
             type: DataTypes.STRING(45),
-            allowNull: false,
+            allowNull: true,
         },
         edad: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
+        },
+        colonia: {
+            type: DataTypes.STRING(60),
+            allowNull: true,
         }
     },
     {
@@ -453,11 +462,6 @@ const Asesoria = conexionDestinoDB.define(
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        id_turno: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-            defaultValue: null,
-        },
         id_asesorado: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -468,27 +472,27 @@ const Asesoria = conexionDestinoDB.define(
         },
         estado: {
             type: DataTypes.STRING(45),
-            allowNull: false,
+            allowNull: true,
         },
         municipio: {
             type: DataTypes.STRING(45),
-            allowNull: false,
+            allowNull: true,
         },
         id_motivo: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
         },
         id_distrito_judicial: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
         },
         id_zona: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
         },
         id_municipio_distrito: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
         }
     },
     {
