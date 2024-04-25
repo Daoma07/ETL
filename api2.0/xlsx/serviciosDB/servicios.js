@@ -6,6 +6,7 @@ const { Asesor } = require('../../models/destino/modeloAsesor');
 const { TipoJuicio } = require('../../models/destino/modeloTipoJuicio');
 const { Asesorado } = require('../../models/destino/modeloAsesorado');
 const { Asesoria } = require('../../models/destino/modeloAsesoria');
+const { Turno } = require('../../models/destino/modeloTurno');
 const { Op } = require('sequelize');
 
 // Función que verifica y registra los motivos
@@ -153,6 +154,21 @@ async function registarAsesoria(estatus_requisitos, fecha_registro, id_tipo_juic
     }
 }
 
+//Funcion para agregar asesorias
+async function registarTurno(fecha_turno, hora_turno, id_asesoria) {
+    try {
+        const turno = await Turno.create({
+            fecha_turno: fecha_turno,
+            hora_turno: hora_turno,
+            id_asesoria: id_asesoria
+        });
+        return turno;
+    } catch (error) {
+        console.error("Error al crear la asesoria:", error);
+        throw error;
+    }
+}
+
 //Formato para los datos
 function escaparSlash(descripcion) {
     return descripcion.replace(/\/\w/, (match) => {
@@ -162,7 +178,7 @@ function escaparSlash(descripcion) {
 
 module.exports = {
     registarAsesoria, registarAsesorado, verificarEstadoCivil, verificarGenero, verificarTipoJuicio,
-    verificarEmpleado, verificarMotivo
+    verificarEmpleado, verificarMotivo, registarTurno
 };
 
 

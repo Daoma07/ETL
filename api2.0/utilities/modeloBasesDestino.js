@@ -187,11 +187,12 @@ const Turno = conexionDestinoDB.define(
             validate: {
                 is: /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/
             },
-            id_asesoria: {
-                type: DataTypes.INTEGER,
-                allowNull: true,
-            },
+           
 
+        },
+        id_asesoria: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
         },
     },
     {
