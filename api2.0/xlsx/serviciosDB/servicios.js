@@ -1,11 +1,11 @@
-const { Motivo } = require('./models/destino/modeloMotivo');
-const { Genero } = require('./models/destino/modeloGenero');
-const { EstadoCivil } = require('./models/destino/modeloEstadoCivil');
-const { Empleado } = require('./models/destino/modeloEmpleado');
-const { Asesor } = require('./models/destino/modeloAsesor');
-const { TipoJuicio } = require('./models/destino/modeloTipoJuicio');
-const { Asesorado } = require('./models/destino/modeloAsesorado');
-const { Asesoria } = require('./models/destino/modeloAsesoria');
+const { Motivo } = require('../../models/destino/modeloMotivo');
+const { Genero } = require('../../models/destino/modeloGenero');
+const { EstadoCivil } = require('../../models/destino/modeloEstadoCivil');
+const { Empleado } = require('../../models/destino/modeloEmpleado');
+const { Asesor } = require('../../models/destino/modeloAsesor');
+const { TipoJuicio } = require('../../models/destino/modeloTipoJuicio');
+const { Asesorado } = require('../../models/destino/modeloAsesorado');
+const { Asesoria } = require('../../models/destino/modeloAsesoria');
 const { Op } = require('sequelize');
 
 // Función que verifica y registra los motivos
@@ -88,6 +88,7 @@ async function verificarTipoJuicio(tipoJuicio) {
 // Función que verifica y registra los generos
 async function verificarGenero(genero) {
     try {
+        genero = escaparSlash(genero)
         let tipoGenero = await Genero.findOne({ where: { descripcion_genero: genero } });
 
         if (tipoGenero) {
@@ -104,6 +105,7 @@ async function verificarGenero(genero) {
 // Función que verifica y registra los estado civil
 async function verificarEstadoCivil(estadoCivil) {
     try {
+        estadoCivil = escaparSlash(estadoCivil);
         let tipoEstadoCivil = await EstadoCivil.findOne({
             where: {
                 estado_civil: estadoCivil
@@ -157,6 +159,11 @@ function escaparSlash(descripcion) {
         return `(${match[1]})`;
     });
 }
+
+module.exports = {
+    registarAsesoria, registarAsesorado, verificarEstadoCivil, verificarGenero, verificarTipoJuicio,
+    verificarEmpleado, verificarMotivo
+};
 
 
 /*

@@ -260,7 +260,7 @@ const Asesorado = conexionDestinoDB.define(
             allowNull: true,
         },
         colonia: {
-            type: DataTypes.STRING(60),
+            type: DataTypes.STRING(500),
             allowNull: true,
         }
     },

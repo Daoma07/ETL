@@ -33,7 +33,7 @@ CREATE TABLE `asesorados` (
   `estado` varchar(60) DEFAULT NULL,
   `municipio` varchar(60) DEFAULT NULL,
   `ciudad` varchar(60) DEFAULT NULL,
-  `colonia` varchar(60) DEFAULT NULL,
+  `colonia` varchar(500) DEFAULT NULL,
   `codigo_postal` varchar(45) DEFAULT NULL,
   `edad` int DEFAULT NULL,
   PRIMARY KEY (`id_asesorado`),

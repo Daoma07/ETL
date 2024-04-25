@@ -1,10 +1,8 @@
-const { readExcel } = require('./conversion/asesoriasConvesion');
+const { registarAsesorias } = require("./controllers/registroAsesoriasETL");
 
 let pathAsesorias = "./resources/Registro de asesorías Zona Centro 2023 (Respuestas) (3).xlsx";
 
-readExcel(pathAsesorias)
-    .then(data => { const dataArray = data; })
-    .catch(error => console.error(error));
 
+registarAsesorias(pathAsesorias);
 
 

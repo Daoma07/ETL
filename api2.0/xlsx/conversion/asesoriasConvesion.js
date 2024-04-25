@@ -4,7 +4,7 @@ async function readExcel(filePath) {
     const workbook = new Excel.Workbook();
 
     try {
-        await workbook.xlsx.readFile(filePath); // Corregir esta línea
+        await workbook.xlsx.readFile(filePath);
         const worksheet = workbook.getWorksheet(1);
 
         const data = [];
