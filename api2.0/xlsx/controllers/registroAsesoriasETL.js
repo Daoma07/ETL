@@ -6,7 +6,7 @@ const { verificarGenero, verificarEstadoCivil, registarAsesorado,
 async function registarAsesorias(path) {
     try {
         const data = await readExcel(path);
-
+        console.log("Procesando datos de asesorias...");
         for (const row of data) {
             try {
                 const genero = await verificarGenero(row.genero);
@@ -35,6 +35,7 @@ async function registarAsesorias(path) {
                 console.error(error);
             }
         }
+        console.log("Proceso terminado de asesorias");
     } catch (error) {
         console.error(error);
     }
