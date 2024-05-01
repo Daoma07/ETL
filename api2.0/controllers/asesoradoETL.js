@@ -43,8 +43,8 @@ async function transformarDatos(asesorados) {
                 municipio: direccion.municipio,
                 ciudad: direccion.ciudad,
                 codigo_postal: direccion.codigo_postal,
-                edad: edad
-
+                edad: edad,
+                id_origen: asesorado.id_asesorado
             }
             newAsesores.push(asesorado_map)
         }
@@ -92,7 +92,7 @@ async function cargarDatos(asesoradosTransformados) {
         const asesoradosDestino = await modeloAsesoradoDes.Asesorado.findAll();
 
         // Identificar los IDs de los registros en la base de datos de destino
-        const idsDestino = asesoradosDestino.map(asesorado => asesorado.id_asesorado);
+        const idsDestino = asesoradosDestino.map(asesorado => asesorado.id_origen);
 
         // Crear una transacción para agrupar las operaciones de actualización y eliminación
         await conexionDestinoDB.transaction(async (t) => {
@@ -101,7 +101,7 @@ async function cargarDatos(asesoradosTransformados) {
                 if (idsDestino.includes(asesoradoTransformado.id_asesorado)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloAsesoradoDes.Asesorado.update(asesoradoTransformado, {
-                        where: { id_asesorado: asesoradoTransformado.id_asesorado },
+                        where: { id_origen: asesoradoTransformado.id_asesorado },
                         transaction: t
                     });
                 } else {
@@ -112,7 +112,7 @@ async function cargarDatos(asesoradosTransformados) {
             // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
             await modeloAsesoradoDes.Asesorado.destroy({
                 where: {
-                    id_asesorado: { [Sequelize.Op.notIn]: asesoradosTransformados.map(asesorado => asesorado.id_asesorado) }
+                    id_origen: { [Sequelize.Op.notIn]: asesoradosTransformados.map(asesorado => asesorado.id_asesorado) }
                 },
                 transaction: t
             });

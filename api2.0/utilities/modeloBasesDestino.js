@@ -23,6 +23,10 @@ const Zona = conexionDestinoDB.define(
                 len: [0, 50],
             },
         },
+        id_origen: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        }
     },
     {
         freezeTableName: true,
@@ -55,6 +59,10 @@ const TipoJuicio = conexionDestinoDB.define(
                 len: [0, 100],
             },
         },
+        id_origen: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        }
     },
     {
         freezeTableName: true,
@@ -83,6 +91,10 @@ const EstadoCivil = conexionDestinoDB.define(
                 len: [0, 50],
             },
         },
+        id_origen: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        }
     },
     {
         freezeTableName: true,
@@ -112,6 +124,10 @@ const Genero = conexionDestinoDB.define(
                 len: [0, 25],
             },
         },
+        id_origen: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        }
     },
     {
         freezeTableName: true,
@@ -144,6 +160,10 @@ const Motivo = conexionDestinoDB.define(
                 len: [0, 75],
             },
         },
+        id_origen: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        }
     },
     {
         freezeTableName: true,
@@ -187,13 +207,16 @@ const Turno = conexionDestinoDB.define(
             validate: {
                 is: /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/
             },
-           
-
         },
+
         id_asesoria: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
+        id_origen: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        }
     },
     {
         freezeTableName: true,
@@ -263,6 +286,10 @@ const Asesorado = conexionDestinoDB.define(
         colonia: {
             type: DataTypes.STRING(500),
             allowNull: true,
+        },
+        id_origen: {
+            type: DataTypes.INTEGER,
+            allowNull: true
         }
     },
     {
@@ -298,6 +325,10 @@ const MunicipioDistro = conexionDestinoDB.define(
             type: DataTypes.STRING(100),
             allowNull: false, // Don't allow null
         },
+        id_origen: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        }
     },
     {
         timestamps: false, // Don't include timestamps
@@ -329,6 +360,10 @@ const Empleado = conexionDestinoDB.define(
         tipo_empleado: {
             type: DataTypes.STRING(100),
             allowNull: false, // Don't allow null
+        },
+        id_origen: {
+            type: DataTypes.INTEGER,
+            allowNull: true
         }
     },
     {
@@ -361,6 +396,10 @@ const Asesor = conexionDestinoDB.define(
             validate: {
                 len: [0, 100],
             },
+        },
+        id_origen: {
+            type: DataTypes.INTEGER,
+            allowNull: true
         }
     },
     {
@@ -393,6 +432,10 @@ const Defensor = conexionDestinoDB.define(
             validate: {
                 len: [0, 100],
             },
+        },
+        id_origen: {
+            type: DataTypes.INTEGER,
+            allowNull: true
         }
     },
     {
@@ -427,6 +470,10 @@ const DistritoJudicial = conexionDestinoDB.define(
             validate: {
                 len: [0, 100],
             },
+        },
+        id_origen: {
+            type: DataTypes.INTEGER,
+            allowNull: true
         }
     },
     {
@@ -494,6 +541,10 @@ const Asesoria = conexionDestinoDB.define(
         id_municipio_distrito: {
             type: DataTypes.INTEGER,
             allowNull: true,
+        },
+        id_origen: {
+            type: DataTypes.INTEGER,
+            allowNull: true
         }
     },
     {
@@ -505,6 +556,17 @@ const Asesoria = conexionDestinoDB.define(
         },
     }
 );
+
+
+conexionDestinoDB.sync({ alter: true })
+    .then(() => {
+        console.log('Tablas creadas exitosamente.');
+
+    })
+    .catch(err => {
+        console.error('Error al crear las tablas:', err);
+    });
+
 //Module exports
 module.exports = {
     Turno,
