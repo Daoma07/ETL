@@ -9,30 +9,15 @@ const { Op } = require('sequelize');
 async function registarTurnos(path) {
     try {
         const data = await readExcel(path);
-
+        console.log("Procesando datos de turnos...");
         for (const row of data) {
-            try {
-                console.log(row.marcaTemporal);
-                console.log(row.horaAtencion);
-                /*
+            try {                   
+            const fechaTurno =  extraerFecha(row.marcaTemporal);
+            const horaTurno =  extraerHora(row.horaAtencion);
+            const idAsesoria = null;
                                
-                               const fechaTurno = await formatFecha(row.marcaTemporal);
-                               const horaTurno = await formatHora(row.horaAtencion);
-                               const idAsesoria = null;
-                               
-                               const turno = registarTurno(fechaTurno, horaTurno, idAsesoria);
-                               */
-
-                /*
-                const nombreUsuario = row.nombreUsuario;
-                const numeroTelefono = row.numeroTelefono;
-                const trabaja = row.trabaja;
-                const ingresoMensual = row.ingresoMensual;
-                const resumenHechos = row.resumenHechos;
-                const conclusion = row.conclusion;
-                const usuarioRecibio = row.usuarioRecibio;
-                */
-
+            const turno = registarTurno(fechaTurno, horaTurno, idAsesoria);
+                
             } catch (error) {
                 console.error(error);
             }
@@ -45,33 +30,26 @@ async function registarTurnos(path) {
 
 
 //Formato para la fecha de turno
-function formatFecha(fecha) {
-    var fechaParts = fecha.split(" ");
-    return fechaParts[0];
+function extraerFecha(fecha) {
+    if (typeof fecha === 'object'&& fecha instanceof Date) {
+        const year = fecha.getFullYear();
+        const month = (fecha.getMonth() + 1).toString().padStart(2, '0'); // Adding 1 because months are zero-indexed
+        const day = fecha.getDate().toString().padStart(2, '0');
+        return year+"-"+month+"-"+day
+    }
+    return null;
 }
 
 //Formato para la hora de turno
-function formatHora(hora) {
-
-    // Dividir la hora en componentes de hora, minutos y segundos
-    var horaPartes = hora.split(":");
-    var horas = parseInt(horaPartes[0]);
-    var minutos = parseInt(horaPartes[1]);
-    var segundos = parseInt(horaPartes[2]);
-
-    var AMPM = horaPartes[2].split(" ");
-    // Verificar si es AM o PM
-    if (AMPM[1] === "PM" && horas < 12) {
-        horas = horas + 12;
-    }
-    if (AMPM[1] === "AM" && horas === 12) {
-        horas = 0;
-    }
-
-
-    segundos = segundos < 10 ? "0" + segundos : segundos;
-    return horas + ":" + minutos + ":" + segundos
-
+function extraerHora(hora) {
+    if (typeof hora === 'object'&& hora instanceof Date) {
+    const hours = hora.getHours().toString().padStart(2, '0');
+    const minutes = hora.getMinutes().toString().padStart(2, '0');
+    const seconds = hora.getSeconds().toString().padStart(2, '0');
+    return hours+":"+minutes+":"+seconds
+    } 
+    return null;
+    
 }
 
 
