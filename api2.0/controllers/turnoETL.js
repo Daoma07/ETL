@@ -21,7 +21,7 @@ function transformarDatos(turnos) {
     if (turnos) {
         cargarDatos(turnos.map(turno => ({
             
-            id_turno: turno.id_turno,
+            id_origen: turno.id_turno,
             fecha_turno: turno.fecha_turno,
             hora_turno: turno.hora_turno
         }))
@@ -45,7 +45,7 @@ async function cargarDatos(turnosTransformados) {
                 if (idsDestino.includes(turnoTransformado.id_turno)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloTurnoDes.Turno.update(turnoTransformado, {
-                        where: { id_turno: turnoTransformado.id_turno },
+                        where: { id_origen: turnoTransformado.id_turno },
                         transaction: t
                     });
                 } else {
@@ -56,7 +56,7 @@ async function cargarDatos(turnosTransformados) {
             // Eliminar registros en la base de datos de turno que no existen en los datos extraídos
             await modeloTurnoDes.Turno.destroy({
                 where: {
-                    id_turno: { [Sequelize.Op.notIn]: turnosTransformados.map(turno => turno.id_turno) }
+                    id_origen: { [Sequelize.Op.notIn]: turnosTransformados.map(turno => turno.id_turno) }
                 },
                 transaction: t
             });

@@ -20,7 +20,7 @@ async function extraerDatos() {
 function transformarDatos(municipioDistritos) {
     if (municipioDistritos) {
         cargarDatos(municipioDistritos.map(municipioDistrito => ({
-            id_municipio_distrito: municipioDistrito.id_municipio_distrito,
+            id_origen: municipioDistrito.id_municipio_distrito,
             nombre_municipio: municipioDistrito.nombre_municipio
         }))
         );
@@ -42,7 +42,7 @@ async function cargarDatos(municipiosDistritosTransformados) {
                 if (idsDestino.includes(municipioDistritoTransformado.id_municipio_distrito)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloMunicipioDistroDes.MunicipioDistro.update(municipioDistritoTransformado, {
-                        where: { id_municipio_distrito: municipioDistritoTransformado.id_municipio_distrito },
+                        where: { id_origen: municipioDistritoTransformado.id_municipio_distrito },
                         transaction: t
                     });
                 } else {
@@ -53,7 +53,7 @@ async function cargarDatos(municipiosDistritosTransformados) {
             // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
             await modeloMunicipioDistroDes.MunicipioDistro.destroy({
                 where: {
-                    id_municipio_distrito: { [Sequelize.Op.notIn]: municipiosDistritosTransformados.map(municipioDistrito => municipioDistrito.id_municipio_distrito) }
+                    id_origen: { [Sequelize.Op.notIn]: municipiosDistritosTransformados.map(municipioDistrito => municipioDistrito.id_municipio_distrito) }
                 },
                 transaction: t
             });

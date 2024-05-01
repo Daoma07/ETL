@@ -20,7 +20,7 @@ async function extraerDatos() {
 function transformarDatos(generos) {
     if (generos) {
         cargarDatos(generos.map(genero => ({
-            id_genero: genero.id_genero,
+            id_origen: genero.id_genero,
             descripcion_genero: genero.descripcion_genero
         }))
         );
@@ -42,7 +42,7 @@ async function cargarDatos(generosTransformados) {
                 if (idsDestino.includes(generoTransformado.id_genero)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloGeneroDes.Genero.update(generoTransformado, {
-                        where: { id_genero: generoTransformado.id_genero },
+                        where: { id_origen: generoTransformado.id_genero },
                         transaction: t
                     });
                 } else {
@@ -53,7 +53,7 @@ async function cargarDatos(generosTransformados) {
             // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
             await modeloGeneroDes.Genero.destroy({
                 where: {
-                    id_genero: { [Sequelize.Op.notIn]: generosTransformados.map(genero => genero.id_genero) }
+                    id_origen: { [Sequelize.Op.notIn]: generosTransformados.map(genero => genero.id_genero) }
                 },
                 transaction: t
             });

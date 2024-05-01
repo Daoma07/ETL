@@ -20,7 +20,7 @@ async function extraerDatos() {
 function transformarDatos(estadoCiviles) {
     if (estadoCiviles) {
         cargarDatos(estadoCiviles.map(estadoCivil => ({
-            id_estado_civil: estadoCivil.id_estado_civil,
+            id_origen: estadoCivil.id_estado_civil,
             estado_civil: estadoCivil.estado_civil
         }))
         );
@@ -42,7 +42,7 @@ async function cargarDatos(estadosCivilesTransformados) {
                 if (idsDestino.includes(estadoCivilTransformado.id_estado_civil)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloEstadoCivilDes.EstadoCivil.update(estadoCivilTransformado, {
-                        where: { id_estado_civil: estadoCivilTransformado.id_estado_civil },
+                        where: { id_origen: estadoCivilTransformado.id_estado_civil },
                         transaction: t
                     });
                 } else {
@@ -53,7 +53,7 @@ async function cargarDatos(estadosCivilesTransformados) {
             // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
             await modeloEstadoCivilDes.EstadoCivil.destroy({
                 where: {
-                    id_estado_civil: { [Sequelize.Op.notIn]: estadosCivilesTransformados.map(estadoCivil => estadoCivil.id_estado_civil) }
+                    id_origen: { [Sequelize.Op.notIn]: estadosCivilesTransformados.map(estadoCivil => estadoCivil.id_estado_civil) }
                 },
                 transaction: t
             });

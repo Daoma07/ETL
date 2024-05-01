@@ -20,7 +20,7 @@ async function extraerDatos() {
 function transformarDatos(tipoJuicios) {
     if (tipoJuicios) {
         cargarDatos(tipoJuicios.map(TipoJuicio => ({
-            id_tipo_juicio: TipoJuicio.id_tipo_juicio,
+            id_origen: TipoJuicio.id_tipo_juicio,
             tipo_juicio: TipoJuicio.tipo_juicio
         }))
         );
@@ -42,7 +42,7 @@ async function cargarDatos(tipoJuiciosTransformados) {
                 if (idsDestino.includes(tipoJuicioTransformado.id_tipo_juicio)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloTipoJuicioDes.TipoJuicio.update(tipoJuicioTransformado, {
-                        where: { id_tipo_juicio: tipoJuicioTransformado.id_tipo_juicio },
+                        where: { id_origen: tipoJuicioTransformado.id_tipo_juicio },
                         transaction: t
                     });
                 } else {
@@ -53,7 +53,7 @@ async function cargarDatos(tipoJuiciosTransformados) {
             // Eliminar registros en la base de datos de TipoJuicio que no existen en los datos extraídos
             await modeloTipoJuicioDes.TipoJuicio.destroy({
                 where: {
-                    id_tipo_juicio: { [Sequelize.Op.notIn]: tipoJuiciosTransformados.map(TipoJuicio => TipoJuicio.id_tipo_juicio) }
+                    id_origen: { [Sequelize.Op.notIn]: tipoJuiciosTransformados.map(TipoJuicio => TipoJuicio.id_tipo_juicio) }
                 },
                 transaction: t
             });

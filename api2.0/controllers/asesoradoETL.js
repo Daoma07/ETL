@@ -34,7 +34,6 @@ async function transformarDatos(asesorados) {
             var genero = await obtenerGenero(asesorado.id_asesorado);
             var edad = await obtenerEdad(asesorado.id_asesorado);
             let asesorado_map = {
-                id_asesorado: asesorado.id_asesorado,
                 id_estado_civil: asesorado.id_estado_civil,
                 numero_hijos: asesorado.numero_hijos,
                 ingreso_mensual: asesorado.ingreso_mensual,

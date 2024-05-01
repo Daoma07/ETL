@@ -38,7 +38,7 @@ async function transformarDatos(asesorias) {
             var empleado = await modeloEmpleado.Empleado.findByPk(asesoria.id_empleado);
             var distritoJudicial = await modeloDistritoJudicial.DistritoJudicial.findByPk(empleado.id_distrito_judicial);
             let asesorado_map = {
-                id_asesoria: asesoria.id_asesoria,
+                id_origen: asesoria.id_asesoria,
                 estatus_requisitos: asesoria.estatus_requisitos,
                 fecha_registro: asesoria.fecha_registro,
                 id_empleado: asesoria.id_empleado,
@@ -91,7 +91,7 @@ async function cargarDatos(asesoriasTransformadas) {
                 if (idsDestino.includes(asesoriaTransformada.id_asesoria)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloAsesoriasDes.Asesoria.update(asesoriaTransformada, {
-                        where: { id_asesoria: asesoriaTransformada.id_asesoria },
+                        where: { id_origen: asesoriaTransformada.id_asesoria },
                         transaction: t
                     });
                 } else {
@@ -101,8 +101,13 @@ async function cargarDatos(asesoriasTransformadas) {
             }
             // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
             await modeloAsesoriasDes.Asesoria.destroy({
+
                 where: {
-                    id_asesoria: { [Sequelize.Op.notIn]: asesoriasTransformadas.map(asesoria => asesoria.id_asesoria) }
+                    [Sequelize.Op.and]:[
+                        {id_origen: {[Sequelize.Op.notIn]: asesoriasTransformadas.map(asesoria => asesoria.id_asesoria)}},
+                        {id_origen: {[Sequelize.Op.not]: null}}
+                    ]
+                    
                 },
                 transaction: t
             });

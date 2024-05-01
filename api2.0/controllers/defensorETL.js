@@ -20,7 +20,7 @@ async function extraerDatos() {
 function transformarDatos(defensores) {
     if (defensores) {
         cargarDatos(defensores.map(defensor => ({
-            id_defensor: defensor.id_defensor,
+            id_origen: defensor.id_defensor,
             nombre_defensor: defensor.nombre_defensor
         }))
         );
@@ -42,7 +42,7 @@ async function cargarDatos(defensoresTransformados) {
                 if (idsDestino.includes(defensorTransformado.id_defensor)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloDefensorDes.Defensor.update(defensorTransformado, {
-                        where: { id_defensor: defensorTransformado.id_defensor },
+                        where: { id_origen: defensorTransformado.id_defensor },
                         transaction: t
                     });
                 } else {
@@ -53,7 +53,7 @@ async function cargarDatos(defensoresTransformados) {
             // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
             await modeloDefensorDes.Defensor.destroy({
                 where: {
-                    id_defensor: { [Sequelize.Op.notIn]: defensoresTransformados.map(defensor => defensor.id_defensor) }
+                    id_origen: { [Sequelize.Op.notIn]: defensoresTransformados.map(defensor => defensor.id_defensor) }
                 },
                 transaction: t
             });

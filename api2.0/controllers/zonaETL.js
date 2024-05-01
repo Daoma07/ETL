@@ -20,7 +20,7 @@ async function extraerDatos() {
 function transformarDatos(zonas) {
     if (zonas) {
         cargarDatos(zonas.map(zona => ({
-            id_zona: zona.id_zona,
+            id_origen: zona.id_zona,
             nombre_zona: zona.nombre_zona,
         }))
         );
@@ -41,7 +41,7 @@ async function cargarDatos(zonasTransformadas) {
                 if (idsDestino.includes(zonaTransformada.id_zona)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloZonaDes.Zona.update(zonaTransformada, {
-                        where: { id_zona: zonaTransformada.id_zona },
+                        where: { id_origen: zonaTransformada.id_zona },
                         transaction: t
                     });
                 } else {
@@ -53,7 +53,7 @@ async function cargarDatos(zonasTransformadas) {
             // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
             await modeloZonaDes.Zona.destroy({
                 where: {
-                    id_zona: { [Sequelize.Op.notIn]: zonasTransformadas.map(zona => zona.id_zona) }
+                    id_origen: { [Sequelize.Op.notIn]: zonasTransformadas.map(zona => zona.id_zona) }
                 },
                 transaction: t
             });

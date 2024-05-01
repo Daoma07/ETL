@@ -319,7 +319,10 @@ const MunicipioDistro = conexionDestinoDB.define(
         // Define the "municipios" table
         id_municipio_distrito: {
             type: DataTypes.INTEGER,
-            primaryKey: true
+            allowNull:false,
+            primaryKey: true,
+            autoIncrement: true,
+            
         },
         nombre_municipio: {
             type: DataTypes.STRING(100),
@@ -389,6 +392,7 @@ const Asesor = conexionDestinoDB.define(
             type: DataTypes.INTEGER,
             primaryKey: true,
             allowNull: false,
+            autoIncrement:true,
         },
         nombre_asesor: {
             type: DataTypes.STRING,
@@ -425,6 +429,7 @@ const Defensor = conexionDestinoDB.define(
             type: DataTypes.INTEGER,
             primaryKey: true,
             allowNull: false,
+            autoIncrement: true,
         },
         nombre_defensor: {
             type: DataTypes.STRING,
@@ -508,7 +513,7 @@ const Asesoria = conexionDestinoDB.define(
         },
         id_empleado: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
         },
         id_asesorado: {
             type: DataTypes.INTEGER,
