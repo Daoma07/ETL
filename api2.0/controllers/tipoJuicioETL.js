@@ -33,16 +33,16 @@ async function cargarDatos(tipoJuiciosTransformados) {
         const tipoJuiciosDestino = await modeloTipoJuicioDes.TipoJuicio.findAll();
 
         // Identificar los IDs de los registros en la base de datos de TipoJuicio
-        const idsDestino = tipoJuiciosDestino.map(TipoJuicio => TipoJuicio.id_tipo_juicio);
+        const idsDestino = tipoJuiciosDestino.map(TipoJuicio => TipoJuicio.id_origen);
 
         // Crear una transacción para agrupar las operaciones de actualización y eliminación
         await conexionDestinoDB.transaction(async (t) => {
             // Actualizar o insertar registros existentes en la base de datos de TipoJuicio
             for (const tipoJuicioTransformado of tipoJuiciosTransformados) {
-                if (idsDestino.includes(tipoJuicioTransformado.id_tipo_juicio)) {
+                if (idsDestino.includes(tipoJuicioTransformado.id_origen)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloTipoJuicioDes.TipoJuicio.update(tipoJuicioTransformado, {
-                        where: { id_origen: tipoJuicioTransformado.id_tipo_juicio },
+                        where: { id_origen: tipoJuicioTransformado.id_origen },
                         transaction: t
                     });
                 } else {
@@ -52,8 +52,13 @@ async function cargarDatos(tipoJuiciosTransformados) {
             }
             // Eliminar registros en la base de datos de TipoJuicio que no existen en los datos extraídos
             await modeloTipoJuicioDes.TipoJuicio.destroy({
+                
                 where: {
-                    id_origen: { [Sequelize.Op.notIn]: tipoJuiciosTransformados.map(TipoJuicio => TipoJuicio.id_tipo_juicio) }
+                    [Sequelize.Op.and]:[
+                        {id_origen: {[Sequelize.Op.notIn]: tipoJuiciosTransformados.map(TipoJuicio => TipoJuicio.id_origen)}},
+                        {id_origen: {[Sequelize.Op.not]: null}}
+                    ]
+                    
                 },
                 transaction: t
             });

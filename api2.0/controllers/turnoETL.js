@@ -36,16 +36,16 @@ async function cargarDatos(turnosTransformados) {
         const turnosDestino = await modeloTurnoDes.Turno.findAll();
 
         // Identificar los IDs de los registros en la base de datos de turno
-        const idsDestino = turnosDestino.map(turno => turno.id_turno);
+        const idsDestino = turnosDestino.map(turno => turno.id_origen);
 
         // Crear una transacción para agrupar las operaciones de actualización y eliminación
         await conexionDestinoDB.transaction(async (t) => {
             // Actualizar o insertar registros existentes en la base de datos de turno
             for (const turnoTransformado of turnosTransformados) {
-                if (idsDestino.includes(turnoTransformado.id_turno)) {
+                if (idsDestino.includes(turnoTransformado.id_origen)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloTurnoDes.Turno.update(turnoTransformado, {
-                        where: { id_origen: turnoTransformado.id_turno },
+                        where: { id_origen: turnoTransformado.id_origen },
                         transaction: t
                     });
                 } else {
@@ -55,8 +55,13 @@ async function cargarDatos(turnosTransformados) {
             }
             // Eliminar registros en la base de datos de turno que no existen en los datos extraídos
             await modeloTurnoDes.Turno.destroy({
+                
                 where: {
-                    id_origen: { [Sequelize.Op.notIn]: turnosTransformados.map(turno => turno.id_turno) }
+                    [Sequelize.Op.and]:[
+                        {id_origen: {[Sequelize.Op.notIn]: turnosTransformados.map(turno => turno.id_origen)}},
+                        {id_origen: {[Sequelize.Op.not]: null}}
+                    ]
+                    
                 },
                 transaction: t
             });

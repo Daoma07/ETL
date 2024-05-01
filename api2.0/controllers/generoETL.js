@@ -33,16 +33,16 @@ async function cargarDatos(generosTransformados) {
         const generosDestino = await modeloGeneroDes.Genero.findAll();
 
         // Identificar los IDs de los registros en la base de datos de destino
-        const idsDestino = generosDestino.map(genero => genero.id_genero);
+        const idsDestino = generosDestino.map(genero => genero.id_origen);
 
         // Crear una transacción para agrupar las operaciones de actualización y eliminación
         await conexionDestinoDB.transaction(async (t) => {
             // Actualizar o insertar registros existentes en la base de datos de destino
             for (const generoTransformado of generosTransformados) {
-                if (idsDestino.includes(generoTransformado.id_genero)) {
+                if (idsDestino.includes(generoTransformado.id_origen)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloGeneroDes.Genero.update(generoTransformado, {
-                        where: { id_origen: generoTransformado.id_genero },
+                        where: { id_origen: generoTransformado.id_origen },
                         transaction: t
                     });
                 } else {
@@ -52,8 +52,13 @@ async function cargarDatos(generosTransformados) {
             }
             // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
             await modeloGeneroDes.Genero.destroy({
+                
                 where: {
-                    id_origen: { [Sequelize.Op.notIn]: generosTransformados.map(genero => genero.id_genero) }
+                    [Sequelize.Op.and]:[
+                        {id_origen: {[Sequelize.Op.notIn]: generosTransformados.map(genero => genero.id_origen)}},
+                        {id_origen: {[Sequelize.Op.not]: null}}
+                    ]
+                    
                 },
                 transaction: t
             });

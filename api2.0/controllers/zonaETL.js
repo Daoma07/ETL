@@ -32,16 +32,16 @@ async function cargarDatos(zonasTransformadas) {
         const zonasDestino = await modeloZonaDes.Zona.findAll();
 
         // Identificar los IDs de los registros en la base de datos de destino
-        const idsDestino = zonasDestino.map(zona => zona.id_zona);
+        const idsDestino = zonasDestino.map(zona => zona.id_origen);
 
         // Crear una transacción para agrupar las operaciones de actualización y eliminación
         await conexionDestinoDB.transaction(async (t) => {
             // Actualizar o insertar registros existentes en la base de datos de destino
             for (const zonaTransformada of zonasTransformadas) {
-                if (idsDestino.includes(zonaTransformada.id_zona)) {
+                if (idsDestino.includes(zonaTransformada.id_origen)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloZonaDes.Zona.update(zonaTransformada, {
-                        where: { id_origen: zonaTransformada.id_zona },
+                        where: { id_origen: zonaTransformada.id_origen },
                         transaction: t
                     });
                 } else {
@@ -52,8 +52,13 @@ async function cargarDatos(zonasTransformadas) {
 
             // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
             await modeloZonaDes.Zona.destroy({
+                
                 where: {
-                    id_origen: { [Sequelize.Op.notIn]: zonasTransformadas.map(zona => zona.id_zona) }
+                    [Sequelize.Op.and]:[
+                        {id_origen: {[Sequelize.Op.notIn]: zonasTransformadas.map(zona => zona.id_origen)}},
+                        {id_origen: {[Sequelize.Op.not]: null}}
+                    ]
+                    
                 },
                 transaction: t
             });
