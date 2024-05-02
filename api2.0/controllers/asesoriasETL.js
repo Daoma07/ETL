@@ -42,7 +42,6 @@ async function transformarDatos(asesorias) {
                 estatus_requisitos: asesoria.estatus_requisitos,
                 fecha_registro: asesoria.fecha_registro,
                 id_empleado: asesoria.id_empleado,
-                id_turno: asesoria.id_turno,
                 id_asesorado: asesoria.id_asesorado,
                 id_tipo_juicio: asesoria.id_tipo_juicio,
                 estado: direccion.estado,
@@ -51,7 +50,6 @@ async function transformarDatos(asesorias) {
                 id_distrito_judicial: empleado.id_distrito_judicial,
                 id_zona: distritoJudicial.id_zona,
                 id_municipio_distrito: distritoJudicial.id_municipio_distrito
-
             }
             newAsesores.push(asesorado_map)
         }

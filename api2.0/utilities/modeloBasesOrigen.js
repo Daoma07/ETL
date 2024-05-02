@@ -640,7 +640,6 @@ const DistritoJudicial = conexionOrigenDB.define(
  * @property {boolean} estatus_requisitos
  * @property {Date} fecha_registro
  * @property {number} id_empleado
- * @property {number} id_turno
  * @property {number} id_asesorado
  * @property {string} usuario 
  * @property {number} id_tipo_juicio
