@@ -23,16 +23,16 @@ function main() {
 async function etl() {
 
     try {
-        iniciarZonaETL();
+        //iniciarZonaETL();
         //iniciarAsesorETL();
         //iniciarDefensorETL();
         //iniciarEmpleadoETL();
-        iniciarTurnoETL();
-        iniciarTipoJuicioETL();
+        //iniciarTurnoETL();
+        //iniciarTipoJuicioETL();
        // iniciarEstadoCivilETL();
-        iniciarGeneroETL();
-        iniciarMunicipioDistritoETL();
-        iniciarMotivoETL();
+        //iniciarGeneroETL();
+        //iniciarMunicipioDistritoETL();
+        //iniciarMotivoETL();
         inciarDistritoJudicialETL();
         // iniciarAsesoradoETL();
         // iniciarAsesoriaETL();

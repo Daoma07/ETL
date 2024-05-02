@@ -33,16 +33,16 @@ async function cargarDatos(tipoJuiciosTransformados) {
         const tipoJuiciosDestino = await modeloTipoJuicioDes.TipoJuicio.findAll();
 
         // Identificar los IDs de los registros en la base de datos de TipoJuicio
-        const idsDestino = tipoJuiciosDestino.map(TipoJuicio => TipoJuicio.id_origen);
+        const idsDestino = tipoJuiciosDestino.map(TipoJuicio => TipoJuicio.id_tipo_juicio);
 
         // Crear una transacción para agrupar las operaciones de actualización y eliminación
         await conexionDestinoDB.transaction(async (t) => {
             // Actualizar o insertar registros existentes en la base de datos de TipoJuicio
             for (const tipoJuicioTransformado of tipoJuiciosTransformados) {
-                if (idsDestino.includes(tipoJuicioTransformado.id_origen)) {
+                if (idsDestino.includes(tipoJuicioTransformado.id_tipo_juicio)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloTipoJuicioDes.TipoJuicio.update(tipoJuicioTransformado, {
-                        where: { id_origen: tipoJuicioTransformado.id_origen },
+                        where: { id_origen: tipoJuicioTransformado.id_tipo_juicio },
                         transaction: t
                     });
                 } else {
@@ -52,13 +52,8 @@ async function cargarDatos(tipoJuiciosTransformados) {
             }
             // Eliminar registros en la base de datos de TipoJuicio que no existen en los datos extraídos
             await modeloTipoJuicioDes.TipoJuicio.destroy({
-                
                 where: {
-                    [Sequelize.Op.and]:[
-                        {id_origen: {[Sequelize.Op.notIn]: tipoJuiciosTransformados.map(TipoJuicio => TipoJuicio.id_origen)}},
-                        {id_origen: {[Sequelize.Op.not]: null}}
-                    ]
-                    
+                    id_origen: { [Sequelize.Op.notIn]: tipoJuiciosTransformados.map(TipoJuicio => TipoJuicio.id_tipo_juicio) }
                 },
                 transaction: t
             });

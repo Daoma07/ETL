@@ -33,16 +33,16 @@ async function cargarDatos(motivosTransformados) {
         const motivosDestino = await modeloMotivoDes.Motivo.findAll();
 
         // Identificar los IDs de los registros en la base de datos de destino
-        const idsDestino = motivosDestino.map(motivo => motivo.id_origen);
+        const idsDestino = motivosDestino.map(motivo => motivo.id_motivo);
 
         // Crear una transacción para agrupar las operaciones de actualización y eliminación
         await conexionDestinoDB.transaction(async (t) => {
             // Actualizar o insertar registros existentes en la base de datos de destino
             for (const motivoTransformado of motivosTransformados) {
-                if (idsDestino.includes(motivoTransformado.id_origen)) {
+                if (idsDestino.includes(motivoTransformado.id_motivo)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloMotivoDes.Motivo.update(motivoTransformado, {
-                        where: { id_origen: motivoTransformado.id_origen },
+                        where: { id_origen: motivoTransformado.id_motivo },
                         transaction: t
                     });
                 } else {
@@ -52,13 +52,8 @@ async function cargarDatos(motivosTransformados) {
             }
             // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
             await modeloMotivoDes.Motivo.destroy({
-                
                 where: {
-                    [Sequelize.Op.and]:[
-                        {id_origen: {[Sequelize.Op.notIn]: motivosTransformados.map(motivo => motivo.id_origen)}},
-                        {id_origen: {[Sequelize.Op.not]: null}}
-                    ]
-                    
+                    id_origen: { [Sequelize.Op.notIn]: motivosTransformados.map(motivo => motivo.id_motivo) }
                 },
                 transaction: t
             });
