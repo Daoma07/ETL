@@ -20,7 +20,7 @@ async function extraerDatos() {
 function transformarDatos(empleados) {
     if (empleados) {
         cargarDatos(empleados.map(empleado => ({
-            id_origen: empleado.id_empleado,
+            id_empleado: empleado.id_empleado,
             tipo_empleado: empleado.tipo_empleado
         }))
         );
@@ -43,7 +43,7 @@ async function cargarDatos(empleadosTransformados) {
                 if (idsDestino.includes(empleadoTransformado.id_empleado)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloEmpleadoDes.Empleado.update(empleadoTransformado, {
-                        where: { id_origen: empleadoTransformado.id_empleado },
+                        where: { id_empleado: empleadoTransformado.id_empleado },
                         transaction: t
                     });
                 } else {
@@ -54,7 +54,7 @@ async function cargarDatos(empleadosTransformados) {
             // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
             await modeloEmpleadoDes.Empleado.destroy({
                 where: {
-                    id_origen: { [Sequelize.Op.notIn]: empleadosTransformados.map(empleado => empleado.id_empleado) }
+                    id_empleado: { [Sequelize.Op.notIn]: empleadosTransformados.map(empleado => empleado.id_empleado) }
                 },
                 transaction: t
             });

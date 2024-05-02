@@ -34,6 +34,7 @@ async function transformarDatos(asesorados) {
             var genero = await obtenerGenero(asesorado.id_asesorado);
             var edad = await obtenerEdad(asesorado.id_asesorado);
             let asesorado_map = {
+                id_asesorado: asesorado.id_asesorado,
                 id_estado_civil: asesorado.id_estado_civil,
                 numero_hijos: asesorado.numero_hijos,
                 ingreso_mensual: asesorado.ingreso_mensual,
@@ -42,8 +43,8 @@ async function transformarDatos(asesorados) {
                 municipio: direccion.municipio,
                 ciudad: direccion.ciudad,
                 codigo_postal: direccion.codigo_postal,
-                edad: edad,
-                id_origen: asesorado.id_asesorado
+                edad: edad
+
             }
             newAsesores.push(asesorado_map)
         }
@@ -91,7 +92,7 @@ async function cargarDatos(asesoradosTransformados) {
         const asesoradosDestino = await modeloAsesoradoDes.Asesorado.findAll();
 
         // Identificar los IDs de los registros en la base de datos de destino
-        const idsDestino = asesoradosDestino.map(asesorado => asesorado.id_origen);
+        const idsDestino = asesoradosDestino.map(asesorado => asesorado.id_asesorado);
 
         // Crear una transacción para agrupar las operaciones de actualización y eliminación
         await conexionDestinoDB.transaction(async (t) => {
@@ -100,7 +101,7 @@ async function cargarDatos(asesoradosTransformados) {
                 if (idsDestino.includes(asesoradoTransformado.id_asesorado)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloAsesoradoDes.Asesorado.update(asesoradoTransformado, {
-                        where: { id_origen: asesoradoTransformado.id_asesorado },
+                        where: { id_asesorado: asesoradoTransformado.id_asesorado },
                         transaction: t
                     });
                 } else {
@@ -111,7 +112,7 @@ async function cargarDatos(asesoradosTransformados) {
             // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
             await modeloAsesoradoDes.Asesorado.destroy({
                 where: {
-                    id_origen: { [Sequelize.Op.notIn]: asesoradosTransformados.map(asesorado => asesorado.id_asesorado) }
+                    id_asesorado: { [Sequelize.Op.notIn]: asesoradosTransformados.map(asesorado => asesorado.id_asesorado) }
                 },
                 transaction: t
             });

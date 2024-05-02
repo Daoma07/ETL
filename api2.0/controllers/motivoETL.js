@@ -20,7 +20,7 @@ async function extraerDatos() {
 function transformarDatos(motivos) {
     if (motivos) {
         cargarDatos(motivos.map(motivo => ({
-            id_origen: motivo.id_motivo,
+            id_motivo: motivo.id_motivo,
             descripcion_motivo: motivo.descripcion_motivo
         }))
         );
@@ -42,7 +42,7 @@ async function cargarDatos(motivosTransformados) {
                 if (idsDestino.includes(motivoTransformado.id_motivo)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloMotivoDes.Motivo.update(motivoTransformado, {
-                        where: { id_origen: motivoTransformado.id_motivo },
+                        where: { id_motivo: motivoTransformado.id_motivo },
                         transaction: t
                     });
                 } else {
@@ -53,7 +53,7 @@ async function cargarDatos(motivosTransformados) {
             // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
             await modeloMotivoDes.Motivo.destroy({
                 where: {
-                    id_origen: { [Sequelize.Op.notIn]: motivosTransformados.map(motivo => motivo.id_motivo) }
+                    id_motivo: { [Sequelize.Op.notIn]: motivosTransformados.map(motivo => motivo.id_motivo) }
                 },
                 transaction: t
             });

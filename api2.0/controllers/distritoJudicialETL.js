@@ -20,7 +20,7 @@ async function extraerDatos() {
 function transformarDatos(distritosJudiciales) {
     if (distritosJudiciales) {
         cargarDatos(distritosJudiciales.map(distritoJudicial => ({
-            id_origen: distritoJudicial.id_distrito_judicial,
+            id_distrito_judicial: distritoJudicial.id_distrito_judicial,
             nombre_distrito_judicial: distritoJudicial.nombre_distrito_judicial
         }))
         );
@@ -33,16 +33,16 @@ async function cargarDatos(distritosJudicialesTransformados) {
         const distritosJudicialesDestino = await modeloDistritoJudicialDes.DistritoJudicial.findAll();
 
         // Identificar los IDs de los registros en la base de datos de destino
-        const idsDestino = distritosJudicialesDestino.map(distritoJudicial => distritoJudicial.id_origen);
+        const idsDestino = distritosJudicialesDestino.map(distritoJudicial => distritoJudicial.id_distrito_judicial);
 
         // Crear una transacción para agrupar las operaciones de actualización y eliminación
         await conexionDestinoDB.transaction(async (t) => {
             // Actualizar o insertar registros existentes en la base de datos de destino
             for (const distritoJudicialTransformado of distritosJudicialesTransformados) {
-                if (idsDestino.includes(distritoJudicialTransformado.id_origen)) {
+                if (idsDestino.includes(distritoJudicialTransformado.id_distrito_judicial)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloDistritoJudicialDes.DistritoJudicial.update(distritoJudicialTransformado, {
-                        where: { id_origen: distritoJudicialTransformado.id_origen },
+                        where: { id_distrito_judicial: distritoJudicialTransformado.id_distrito_judicial },
                         transaction: t
                     });
                 } else {
@@ -52,15 +52,9 @@ async function cargarDatos(distritosJudicialesTransformados) {
             }
             // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
             await modeloDistritoJudicialDes.DistritoJudicial.destroy({
-                
-                    where: {
-                        [Sequelize.Op.and]:[
-                            {id_origen: {[Sequelize.Op.notIn]: distritosJudicialesTransformados.map(distritoJudicial => distritoJudicial.id_origen)}},
-                            {id_origen: {[Sequelize.Op.not]: null}}
-                        ]
-                        
-                    },
-    
+                where: {
+                    id_distrito_judicial: { [Sequelize.Op.notIn]: distritosJudicialesTransformados.map(distritoJudicial => distritoJudicial.id_distrito_judicial) }
+                },
                 transaction: t
             });
         });

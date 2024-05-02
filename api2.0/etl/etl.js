@@ -23,19 +23,19 @@ function main() {
 async function etl() {
 
     try {
-        //iniciarZonaETL();
-        //iniciarAsesorETL();
-        //iniciarDefensorETL();
-        //iniciarEmpleadoETL();
-        //iniciarTurnoETL();
-        //iniciarTipoJuicioETL();
-       // iniciarEstadoCivilETL();
-        //iniciarGeneroETL();
-        //iniciarMunicipioDistritoETL();
-        //iniciarMotivoETL();
+        iniciarZonaETL();
+        iniciarAsesorETL();
+        iniciarDefensorETL();
+        iniciarEmpleadoETL();
+        iniciarTurnoETL();
+        iniciarTipoJuicioETL();
+        iniciarEstadoCivilETL();
+        iniciarGeneroETL();
+        iniciarMunicipioDistritoETL();
+        iniciarMotivoETL();
         inciarDistritoJudicialETL();
-        // iniciarAsesoradoETL();
-        // iniciarAsesoriaETL();
+        iniciarAsesoradoETL();
+        iniciarAsesoriaETL();
         console.log("App Corriendo.....");
     } catch (error) {
         console.error('Error en el proceso ETL:', error);

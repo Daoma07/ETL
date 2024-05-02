@@ -20,8 +20,8 @@ async function extraerDatos() {
 function transformarDatos(asesores) {
     if (asesores) {
         cargarDatos(asesores.map(asesor => ({
-            nombre_asesor: asesor.nombre_asesor,
-            id_origen: asesor.id_asesor
+            id_asesor: asesor.id_asesor,
+            nombre_asesor: asesor.nombre_asesor
         }))
         );
     }
@@ -43,7 +43,7 @@ async function cargarDatos(asesoresTransformadas) {
                 if (idsDestino.includes(asesorTransformado.id_asesor)) {
                     // Si el registro existe, actualizarlo en lugar de insertarlo nuevamente
                     await modeloAsesorDes.Asesor.update(asesorTransformado, {
-                        where: { id_origen: asesorTransformado.id_asesor },
+                        where: { id_asesor: asesorTransformado.id_asesor },
                         transaction: t
                     });
                 } else {
@@ -54,7 +54,7 @@ async function cargarDatos(asesoresTransformadas) {
             // Eliminar registros en la base de datos de destino que no existen en los datos extraídos
             await modeloAsesorDes.Asesor.destroy({
                 where: {
-                    id_origen: { [Sequelize.Op.notIn]: asesoresTransformadas.map(asesor => asesor.id_asesor) }
+                    id_asesor: { [Sequelize.Op.notIn]: asesoresTransformadas.map(asesor => asesor.id_asesor) }
                 },
                 transaction: t
             });
