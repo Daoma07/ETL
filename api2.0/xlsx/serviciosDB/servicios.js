@@ -169,6 +169,8 @@ async function registarTurno(fecha_turno, hora_turno, id_asesoria) {
     }
 }
 
+
+
 //Formato para los datos
 function escaparSlash(descripcion) {
     return descripcion.replace(/\/\w/, (match) => {

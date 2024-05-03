@@ -5,6 +5,6 @@
       "port": 3306,
       "username": "root",
       "password": "root",
-      "databaseName": "reportes_defensoria_excel"
+      "databaseName": "reporte_defensoria_excel"
     }
   }

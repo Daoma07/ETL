@@ -1,4 +1,4 @@
-const { conexionDestinoDBExcel } = require("../../db/conexion");
+const { conexionDestinoDB } = require("../db/conexion");
 
 const { DataTypes } = require("sequelize");
 
@@ -7,7 +7,7 @@ const { DataTypes } = require("sequelize");
  * @property {number} id_estado_civil
  * @property {string} estado_civil
   */
-const EstadoCivil = conexionDestinoDBExcel.define(
+const EstadoCivil = conexionDestinoDB.define(
     "estados_civiles",
     {
         id_estado_civil: {
@@ -35,7 +35,7 @@ const EstadoCivil = conexionDestinoDBExcel.define(
  * @property {number} id_genero
  * @property {string} descripcion_genero
  * */
-const Genero = conexionDestinoDBExcel.define(
+const Genero = conexionDestinoDB.define(
     "generos",
     {
         id_genero: {
@@ -62,7 +62,7 @@ const Genero = conexionDestinoDBExcel.define(
     }
 );
 
-const DistritoJudicial = conexionDestinoDBExcel.define(
+const DistritoJudicial = conexionDestinoDB.define(
     "distritos_judiciales",
     {
         id_distrito_judicial: {
@@ -89,7 +89,7 @@ const DistritoJudicial = conexionDestinoDBExcel.define(
     }
 );
 
-const Asesorado = conexionDestinoDBExcel.define(
+const Asesorado = conexionDestinoDB.define(
     "asesorados",
     {
         id_asesorado: {
@@ -125,7 +125,7 @@ const Asesorado = conexionDestinoDBExcel.define(
     }
 );
 
-const Asesoria = conexionDestinoDBExcel.define(
+const Asesoria = conexionDestinoDB.define(
     "asesorias",
     {
         id_asesoria: {
@@ -171,7 +171,7 @@ const Asesoria = conexionDestinoDBExcel.define(
     }
 );
 
-const Motivo = conexionDestinoDBExcel.define(
+const Motivo = conexionDestinoDB.define(
     "motivos",
     {
         id_motivo: {
@@ -199,7 +199,7 @@ const Motivo = conexionDestinoDBExcel.define(
 );
 
 
-const Empleado = conexionDestinoDBExcel.define(
+const Empleado = conexionDestinoDB.define(
     "empleados",
     {
         id_empleado: {
@@ -223,7 +223,7 @@ const Empleado = conexionDestinoDBExcel.define(
     }
 );
 
-const Asesor = conexionDestinoDBExcel.define(
+const Asesor = conexionDestinoDB.define(
     "asesores",
     {
         id_asesor: {
@@ -249,7 +249,7 @@ const Asesor = conexionDestinoDBExcel.define(
     }
 );
 
-const Defensor = conexionDestinoDBExcel.define(
+const Defensor = conexionDestinoDB.define(
     "defensores",
     {
         id_defensor: {
@@ -275,7 +275,7 @@ const Defensor = conexionDestinoDBExcel.define(
     }
 );
 
-const Turno = conexionDestinoDBExcel.define(
+const Turno = conexionDestinoDB.define(
     "turnos",
     {
         id_turno: {
@@ -311,7 +311,7 @@ const Turno = conexionDestinoDBExcel.define(
     }
 );
 
-const TipoJuicio = conexionDestinoDBExcel.define(
+const TipoJuicio = conexionDestinoDB.define(
     "tipos_juicios",
     {
         id_tipo_juicio: {
@@ -333,6 +333,11 @@ const TipoJuicio = conexionDestinoDBExcel.define(
         timestamps: false,
     }
 );
+
+(async () => {
+    await conexionDestinoDB.sync({ force: true }); // This will drop the table if it already exists
+    console.log("Creacion de Tablas completada!");
+  })();
 
 module.exports = {
     Turno,
