@@ -1,12 +1,12 @@
-const { Motivo } = require('../../models/destino/modeloMotivo');
-const { Genero } = require('../../models/destino/modeloGenero');
-const { EstadoCivil } = require('../../models/destino/modeloEstadoCivil');
-const { Empleado } = require('../../models/destino/modeloEmpleado');
-const { Asesor } = require('../../models/destino/modeloAsesor');
-const { TipoJuicio } = require('../../models/destino/modeloTipoJuicio');
-const { Asesorado } = require('../../models/destino/modeloAsesorado');
-const { Asesoria } = require('../../models/destino/modeloAsesoria');
-const { Turno } = require('../../models/destino/modeloTurno');
+const { Motivo } = require('../destino/modeloMotivo');
+const { Genero } = require('../destino/modeloGenero');
+const { EstadoCivil } = require('../destino/modeloEstadoCivil');
+const { Empleado } = require('../destino/modeloEmpleado');
+const { Asesor } = require('../destino/modeloAsesor');
+const { TipoJuicio } = require('../destino/modeloTipoJuicio');
+const { Asesorado } = require('../destino/modeloAsesorado');
+const { Asesoria } = require('../destino/modeloAsesoria');
+const { Turno } = require('../destino/modeloTurno');
 const { Op } = require('sequelize');
 
 // Función que verifica y registra los motivos
@@ -18,10 +18,12 @@ async function verificarMotivo(descripcion) {
             }
         });
 
-        if (motivo) {
-            return motivo.id_motivo;
+        if (motivo == null) {
+            motivo = await Motivo.create({
+                descripcion_motivo: descripcion
+            })
         }
-        return null;
+        return motivo.id_motivo;
     } catch (error) {
         throw error;
     }
@@ -95,7 +97,9 @@ async function verificarGenero(genero) {
         if (tipoGenero) {
             return tipoGenero.id_genero;
         } else {
-            tipoGenero = await Genero.findOne({ where: { descripcion_genero: "No Binario" } });
+            tipoGenero = await Genero.create({ 
+                descripcion_genero: genero
+            });
             return tipoGenero.id_genero;
         }
     } catch (error) {
@@ -112,10 +116,16 @@ async function verificarEstadoCivil(estadoCivil) {
                 estado_civil: estadoCivil
             }
         });
-        if (tipoEstadoCivil) {
-            return tipoEstadoCivil.id_estado_civil;
+
+        if (tipoEstadoCivil == null) {
+            tipoEstadoCivil = await EstadoCivil.create({
+                estado_civil: estadoCivil,
+            });
         }
-        return null;
+           
+        return tipoEstadoCivil.id_estado_civil;
+        
+        
     } catch (error) {
         throw error;
     }

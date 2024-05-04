@@ -34,8 +34,12 @@ function extraerFecha(fecha) {
     if (typeof fecha === 'object'&& fecha instanceof Date) {
         const year = fecha.getFullYear();
         const month = (fecha.getMonth() + 1).toString().padStart(2, '0'); // Adding 1 because months are zero-indexed
-        const day = fecha.getDate().toString().padStart(2, '0');
-        return year+"-"+month+"-"+day
+        const day = fecha.getDay().toString().padStart(2, '0');
+        const hour = fecha.getHours().toString().padStart(2, '0');
+        const minute = fecha.getMinutes().toString().padStart(2, '0');
+        const second = fecha.getSeconds().toString().padStart(2, '0');
+        return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+        
     }
     return null;
 }

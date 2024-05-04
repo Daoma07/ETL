@@ -19,6 +19,7 @@ async function registarAsesorias(path) {
                 const motivo = await verificarMotivo(row.motivoNegativa);
                 const cumpleRequisitos = verificarRequisitos(row.cumpleRequisitos);
                 const marcaTemporal = extraerFecha(row.marcaTemporal);
+                console.log(marcaTemporal);
                 const asesoria = await registarAsesoria(cumpleRequisitos, marcaTemporal, tipoJuicio, asesorado, motivo, nombreAsesor);
 
                 /*
@@ -56,12 +57,15 @@ function verificarRequisitos(cumpleRequesitos) {
 
 
 function extraerFecha(fecha) {
-    if (typeof fecha === 'string') {
-        const partes = fecha.split(" ");
-        const fechaFormateada = new Date(partes[0]);
-        if (!isNaN(fechaFormateada.getTime())) {
-            return fechaFormateada;
-        }
+    if (typeof fecha === 'object'&& fecha instanceof Date) {
+        const year = fecha.getFullYear();
+        const month = (fecha.getMonth() + 1).toString().padStart(2, '0'); // Adding 1 because months are zero-indexed
+        const day = fecha.getDay().toString().padStart(2, '0');
+        const hour = fecha.getHours().toString().padStart(2, '0');
+        const minute = fecha.getMinutes().toString().padStart(2, '0');
+        const second = fecha.getSeconds().toString().padStart(2, '0');
+        return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+        
     }
     return null;
 }

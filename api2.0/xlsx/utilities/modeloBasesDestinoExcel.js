@@ -140,7 +140,7 @@ const Asesoria = conexionDestinoDB.define(
             defaultValue: null,
         },
         fecha_registro: {
-            type: DataTypes.DATEONLY,
+            type: DataTypes.DATE,
             allowNull: true,
             defaultValue: null,
         },
@@ -335,7 +335,7 @@ const TipoJuicio = conexionDestinoDB.define(
 );
 
 (async () => {
-    await conexionDestinoDB.sync({ force: true }); // This will drop the table if it already exists
+    await conexionDestinoDB.sync({ force: false }); // This will drop the table if it already exists
     console.log("Creacion de Tablas completada!");
   })();
 
