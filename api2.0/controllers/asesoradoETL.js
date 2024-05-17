@@ -8,9 +8,11 @@ const modeloColonia = require('../models/direccion/colonias.models');
 const modeloCiudad = require('../models/direccion/ciudades.models');
 const modeloPersonaOri = require('../models/origen/modeloPersona');
 const modeloGenero = require('../models/origen/modeloGenero');
+const { getLastLog } = require("../etl/logger");
 const { conexionDestinoDB, Sequelize } = require('../db/conexion');
 
-async function extraerDatos() {
+async function extraerDatos(lastLog) {
+    console.log(lastLog);
     try {
         const asesorados = await modeloAsesoradoOri.Asesorado.findAll();
         if (asesorados) {
@@ -124,7 +126,9 @@ async function cargarDatos(asesoradosTransformados) {
 }
 
 function iniciarAsesoradoETL() {
-    extraerDatos();
+    let filePath = "./bitacora.log"
+    let lastLog= getLastLog(filePath);
+    extraerDatos(lastLog);
 }
 
 module.exports = {

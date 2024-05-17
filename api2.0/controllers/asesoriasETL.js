@@ -10,11 +10,18 @@ const modeloCiudad = require('../models/direccion/ciudades.models');
 const modeloEmpleado = require('../models/origen/modeloEmpleado');
 const modeloPersonaOri = require('../models/origen/modeloPersona');
 const modeloDistritoJudicial = require('../models/origen/modeloDistritoJudicial');
+const { logEnd,getLastLog } = require("../etl/logger");
 const { conexionDestinoDB, Sequelize } = require('../db/conexion');
+const { Op } = require('sequelize');
 
 async function extraerDatos() {
     try {
-        const asesorias = await modeloAsesoriasOri.Asesoria.findAll();
+        let lastLog = await getLastLog("./bitacora.log");
+        let lastLogObj= await JSON.parse(lastLog);
+        
+        let ultimaFechaActualizacion = await Date.parse(lastLogObj.message);
+
+        const asesorias = await obtenerPorFecha(ultimaFechaActualizacion);
         if (asesorias) {
             transformarDatos(asesorias);
         } else {
@@ -105,10 +112,21 @@ async function cargarDatos(asesoriasTransformadas) {
                 transaction: t
             });
         });
-
+        console.log("Asesorias Actualizados....")
     } catch (error) {
         console.error('Error al cargar datos:', error);
     }
+}
+
+async function obtenerPorFecha(fechaActualizacion) {
+    //const persona = await modeloPersonaOri.Persona.findById(id_asesorado);
+    const asesoriasPorFecha = await modeloAsesoriasOri.Asesoria.findAll({
+        where: {
+            fecha_registro: {
+                [Op.gte]: fechaActualizacion,
+            }}});
+    return asesoriasPorFecha;
+
 }
 
 function iniciarAsesoriaETL() {

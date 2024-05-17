@@ -15,6 +15,7 @@ Asesoria.belongsTo(Zona, { foreignKey: "id_zona" });
 Asesoria.belongsTo(MunicipioDistro, { foreignKey: "id_municipio_distrito" });
 
 
+
 module.exports = {
   Asesoria
   , Turno, Asesorado, Empleado,

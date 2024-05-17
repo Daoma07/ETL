@@ -13,31 +13,60 @@ const { inciarDistritoJudicialETL } = require("../controllers/distritoJudicialET
 const { iniciarAsesoradoETL } = require("../controllers/asesoradoETL");
 const { iniciarAsesoriaETL } = require("../controllers/asesoriasETL");
 const { iniciarZonaETL } = require("../controllers/zonaETL");
-const { logEnd } = require("./logger");
-function main() {
+const { logEnd,getLastLog } = require("./logger");
+ function main() {
     cron.schedule(' */10 * * * * *', () => {
         etl();
-        logEnd(getDate());
+        //logEnd(getDate());
+        
     })
 }
 
 async function etl() {
 
     try {
-        // iniciarZonaETL();
-        // iniciarAsesorETL();
-        // iniciarDefensorETL();
-        // iniciarEmpleadoETL();
-        // iniciarTurnoETL();
-        // iniciarTipoJuicioETL();
-        // iniciarEstadoCivilETL();
-        // iniciarGeneroETL();
-        // iniciarMunicipioDistritoETL();
-        // iniciarMotivoETL();
-        // inciarDistritoJudicialETL();
-        // iniciarAsesoradoETL();
-        // iniciarAsesoriaETL();
-        console.log("App Corriendo.....");
+        //let lastLog = await getLastLog("./bitacora.log");
+        //console.log(lastLog);
+        await iniciarZonaETL();
+    console.log("Zona ETL completed");
+
+    await iniciarAsesorETL();
+    console.log("Asesor ETL completed");
+
+    await iniciarDefensorETL();
+    console.log("Defensor ETL completed");
+
+    await iniciarEmpleadoETL();
+    console.log("Empleado ETL completed");
+
+    await iniciarTurnoETL();
+    console.log("Turno ETL completed");
+
+    await iniciarTipoJuicioETL();
+    console.log("Tipo Juicio ETL completed");
+
+    await iniciarEstadoCivilETL();
+    console.log("Estado Civil ETL completed");
+
+    await iniciarGeneroETL();
+    console.log("Genero ETL completed");
+
+    await iniciarMunicipioDistritoETL();
+    console.log("Municipio Distrito ETL completed");
+
+    await iniciarMotivoETL();
+    console.log("Motivo ETL completed");
+
+    await inciarDistritoJudicialETL();
+    console.log("Distrito Judicial ETL completed");
+
+    await iniciarAsesoradoETL();
+    console.log("Asesorado ETL completed");
+
+    await iniciarAsesoriaETL();
+    console.log("Asesoria ETL completed");
+        //console.log("App Corriendo.....");
+        
     } catch (error) {
         console.error('Error en el proceso ETL:', error);
 
@@ -58,7 +87,6 @@ const seconds = currentDate.getSeconds(); // Seconds (0-59)
 // Format the date and time as a string
 const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
-console.log('Current date and time:', formattedDateTime);
 return formattedDateTime;
 }
 
