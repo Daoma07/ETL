@@ -15,11 +15,18 @@ const { iniciarAsesoriaETL } = require("../controllers/asesoriasETL");
 const { iniciarZonaETL } = require("../controllers/zonaETL");
 const { logEnd,getLastLog } = require("./logger");
  function main() {
+    //Run every 10 seconds
     cron.schedule(' */10 * * * * *', () => {
         etl();
         
         
     })
+    //Run etl at 2:30 am everyday
+    // cron.schedule('30 2 * * *', () => {
+    //     etl();
+        
+        
+    // })
 }
 
 async function etl() {
