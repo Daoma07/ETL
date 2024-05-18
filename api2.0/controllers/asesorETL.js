@@ -59,7 +59,7 @@ async function cargarDatos(asesoresTransformadas) {
                 transaction: t
             });
         });
-        console.log("Asesor Actualizados....")
+    
     } catch (error) {
         console.error('Error al cargar datos:', error);
     }

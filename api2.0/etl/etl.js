@@ -17,7 +17,7 @@ const { logEnd,getLastLog } = require("./logger");
  function main() {
     cron.schedule(' */10 * * * * *', () => {
         etl();
-        //logEnd(getDate());
+        
         
     })
 }
@@ -27,44 +27,46 @@ async function etl() {
     try {
         //let lastLog = await getLastLog("./bitacora.log");
         //console.log(lastLog);
-        await iniciarZonaETL();
+    iniciarZonaETL();
     console.log("Zona ETL completed");
 
-    await iniciarAsesorETL();
+    iniciarAsesorETL();
     console.log("Asesor ETL completed");
 
-    await iniciarDefensorETL();
+    iniciarDefensorETL();
     console.log("Defensor ETL completed");
 
-    await iniciarEmpleadoETL();
+    iniciarEmpleadoETL();
     console.log("Empleado ETL completed");
 
-    await iniciarTurnoETL();
+    iniciarTurnoETL();
     console.log("Turno ETL completed");
 
-    await iniciarTipoJuicioETL();
+    iniciarTipoJuicioETL();
     console.log("Tipo Juicio ETL completed");
 
-    await iniciarEstadoCivilETL();
+    iniciarEstadoCivilETL();
     console.log("Estado Civil ETL completed");
 
-    await iniciarGeneroETL();
+    iniciarGeneroETL();
     console.log("Genero ETL completed");
 
-    await iniciarMunicipioDistritoETL();
+    iniciarMunicipioDistritoETL();
     console.log("Municipio Distrito ETL completed");
 
-    await iniciarMotivoETL();
+    iniciarMotivoETL();
     console.log("Motivo ETL completed");
 
-    await inciarDistritoJudicialETL();
+    inciarDistritoJudicialETL();
     console.log("Distrito Judicial ETL completed");
 
-    await iniciarAsesoradoETL();
+    iniciarAsesoradoETL();
     console.log("Asesorado ETL completed");
 
-    await iniciarAsesoriaETL();
+    iniciarAsesoriaETL();
     console.log("Asesoria ETL completed");
+
+    
         //console.log("App Corriendo.....");
         
     } catch (error) {

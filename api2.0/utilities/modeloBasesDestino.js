@@ -505,10 +505,10 @@ const Asesoria = conexionDestinoDB.define(
         },
     }
 );
-(async () => {
-    await conexionDestinoDB.sync({ force: true }); // This will drop the table if it already exists
-    console.log("Creacion de Tablas completada!");
-  })();
+// (async () => {
+//     await conexionDestinoDB.sync({ force: true }); // This will drop the table if it already exists
+//     console.log("Creacion de Tablas completada!");
+//   })();
 
 //Module exports
 module.exports = {

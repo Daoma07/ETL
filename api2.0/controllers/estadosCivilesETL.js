@@ -58,7 +58,7 @@ async function cargarDatos(estadosCivilesTransformados) {
                 transaction: t
             });
         });
-
+    
     } catch (error) {
         console.error('Error al cargar datos:', error);
     }

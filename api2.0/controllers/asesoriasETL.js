@@ -112,7 +112,7 @@ async function cargarDatos(asesoriasTransformadas) {
                 transaction: t
             });
         });
-        console.log("Asesorias Actualizados....")
+        
     } catch (error) {
         console.error('Error al cargar datos:', error);
     }

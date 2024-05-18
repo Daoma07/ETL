@@ -58,7 +58,7 @@ async function cargarDatos(motivosTransformados) {
                 transaction: t
             });
         });
-
+    
     } catch (error) {
         console.error('Error al cargar datos:', error);
     }

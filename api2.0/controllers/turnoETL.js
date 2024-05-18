@@ -61,7 +61,7 @@ async function cargarDatos(turnosTransformados) {
                 transaction: t
             });
         });
-        console.log("Turnos actualizados......")
+    
     } catch (error) {
         console.error('Error al cargar datos:', error);
     }
